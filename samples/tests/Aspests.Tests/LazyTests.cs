@@ -1,8 +1,10 @@
 ﻿using Aspects.Lazy;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Aspests.Tests
@@ -51,6 +53,24 @@ namespace Aspests.Tests
             var timeB = t.ServiceB.DateTime;
 
             Assert.NotEqual(timeA, timeB);
+        }
+
+        [Fact]
+        public void Lazy_Initialize_Concurrent_Test()
+        {
+            var t = new TestClass();
+
+            var tasks = new Task<ServiceA>[100];
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                tasks[i] = new Task<ServiceA>(() => t.ServiceA);
+            }
+
+            Parallel.ForEach(tasks, new ParallelOptions() { MaxDegreeOfParallelism = 50 }, task => task.Start());
+
+            Task.WaitAll(tasks);
+
+            Assert.True(tasks.All(o => o.Result.DateTime == t.ServiceA.DateTime));
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿This package provides Lazy property.
-Put `LazyAttribute` attribure on your get only properties. 
+Put `LazyAttribute` attribure on arrow-properties(only getter property).
 
 ```csharp
 class TestClass

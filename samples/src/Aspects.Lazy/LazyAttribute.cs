@@ -16,14 +16,23 @@ namespace Aspects.Lazy
             if (!_backFields.TryGetValue(name, out object value))
             {
                 var newValue = method(arguments);
+
                 if (_backFields.TryGetValue(name, out object created))
                 {
                     value = created;
                 }
                 else
                 {
-                    _backFields.Add(name, newValue);
-                    value = newValue;
+                    try
+                    {
+                        _backFields.Add(name, newValue);
+                        value = newValue;
+                    }
+                    catch (ArgumentException)
+                    {
+                        _backFields.TryGetValue(name, out object created2);
+                        value = created2;
+                    }
                 }
             }
 
@@ -31,7 +40,8 @@ namespace Aspects.Lazy
         }
     }
 
-    [Injection(typeof(LazyAspect), Propagation = PropagateTo.Properties)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [Injection(typeof(LazyAspect))]
     public class LazyAttribute : Attribute
     {
 
