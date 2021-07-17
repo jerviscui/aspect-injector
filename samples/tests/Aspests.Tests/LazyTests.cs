@@ -62,11 +62,22 @@ namespace Aspests.Tests
             [Lazy]
             public ServiceA ServiceB9 => new ServiceA(DateTime.Now);
 
-            public string ServiceC => "ServiceC";
+            public ServiceA ServiceC => new ServiceA(DateTime.Now);
         }
 
         [Fact]
-        public void Lazy_Initialize_Once_OneProperty_Test()
+        public void GetOnlyProperty_Test()
+        {
+            var t = new TestClass();
+
+            var first = t.ServiceC.DateTime;
+            var second = t.ServiceC.DateTime;
+
+            Assert.NotEqual(first, second);
+        }
+
+        [Fact]
+        public void LazyInitializeOnce_OneProperty_Test()
         {
             var t = new TestClass();
 
@@ -77,7 +88,7 @@ namespace Aspests.Tests
         }
 
         [Fact]
-        public void Lazy_Initialize_PerProperty_Test()
+        public void LazyInitialize_PerProperty_Test()
         {
             var t = new TestClass();
 
@@ -89,7 +100,7 @@ namespace Aspests.Tests
         }
 
         [Fact]
-        public void Lazy_Initialize_Concurrent_Test()
+        public void LazyInitialize_Concurrent_Test()
         {
             var t = new TestClass();
 
@@ -136,7 +147,6 @@ namespace Aspests.Tests
             }
 
             Parallel.ForEach(tasks, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount - 1 }, task => task.Start());
-
             Task.WaitAll(tasks);
 
             var result = tasks.GroupBy(o => o.Result.DateTime);
