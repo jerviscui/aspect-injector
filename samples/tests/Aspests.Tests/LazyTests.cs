@@ -139,7 +139,7 @@ namespace Aspests.Tests
 
             Task.WaitAll(tasks);
 
-            var result = tasks.GroupBy(o => o.Result.DateTime);//.Select(o => o.First().Result);
+            var result = tasks.GroupBy(o => o.Result.DateTime);
             Assert.True(result.Count() == 9);
         }
     }

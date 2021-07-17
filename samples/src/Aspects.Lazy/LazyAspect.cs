@@ -26,36 +26,6 @@ namespace Aspects.Lazy
             }
 
             return value;
-
-            //下面会有线程安全问题，有概率相同键产生两个值
-            //try
-            //{
-            //    if (!_backFields.TryGetValue(name, out object value))
-            //    {
-            //        var newValue = method(arguments);
-
-            //        if (!_backFields.TryGetValue(name, out value))
-            //        {
-            //            try
-            //            {
-            //                _backFields.Add(name, newValue);
-            //                value = newValue;
-            //            }
-            //            catch (ArgumentException)
-            //            {
-            //                _backFields.TryGetValue(name, out value);
-            //            }
-            //        }
-            //    }
-
-            //    return value;
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-
-            //return "";
         }
     }
 }
